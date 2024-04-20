@@ -1,25 +1,27 @@
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+import os
 
 # hyperparameters
-batch_size = 16 # how many independent sequences will we process in parallel?
-block_size = 32 # what is the maximum context length for predictions?
-max_iters = 5000
-eval_interval = 100
-learning_rate = 1e-3
+batch_size = 64 # how many independent sequences will we process in parallel?
+block_size = 256 # what is the maximum context length for predictions?
+max_iters = 10000
+eval_interval = 500
+learning_rate = 3e-4
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 200
-n_embd = 64
-n_head = 4
-n_layer = 4
-dropout = 0.0
+n_embd = 384
+n_head = 6
+n_layer = 6
+dropout = 0.2
+model_path = os.path.join("trained_model.pt")
 # ------------
 
 torch.manual_seed(1337)
 
 # wget https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt
-with open('harrypotter.txt', 'r', encoding='utf-8') as f:
+with open('HP_bk1.txt', 'r', encoding='utf-8') as f:
     text = f.read()
 
 # here are all the unique characters that occur in this text
@@ -74,17 +76,19 @@ class Head(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
+        # input of size (batch, time-step, channels)
+        # output of size (batch, time-step, head size)
         B,T,C = x.shape
-        k = self.key(x)   # (B,T,C)
-        q = self.query(x) # (B,T,C)
+        k = self.key(x)   # (B,T,hs)
+        q = self.query(x) # (B,T,hs)
         # compute attention scores ("affinities")
-        wei = q @ k.transpose(-2,-1) * C**-0.5 # (B, T, C) @ (B, C, T) -> (B, T, T)
+        wei = q @ k.transpose(-2,-1) * k.shape[-1]**-0.5 # (B, T, hs) @ (B, hs, T) -> (B, T, T)
         wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf')) # (B, T, T)
         wei = F.softmax(wei, dim=-1) # (B, T, T)
         wei = self.dropout(wei)
         # perform the weighted aggregation of the values
-        v = self.value(x) # (B,T,C)
-        out = wei @ v # (B, T, T) @ (B, T, C) -> (B, T, C)
+        v = self.value(x) # (B,T,hs)
+        out = wei @ v # (B, T, T) @ (B, T, hs) -> (B, T, hs)
         return out
 
 class MultiHeadAttention(nn.Module):
@@ -93,7 +97,7 @@ class MultiHeadAttention(nn.Module):
     def __init__(self, num_heads, head_size):
         super().__init__()
         self.heads = nn.ModuleList([Head(head_size) for _ in range(num_heads)])
-        self.proj = nn.Linear(n_embd, n_embd)
+        self.proj = nn.Linear(head_size * num_heads, n_embd)
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
@@ -133,8 +137,7 @@ class Block(nn.Module):
         x = x + self.ffwd(self.ln2(x))
         return x
 
-# super simple bigram model
-class BigramLanguageModel(nn.Module):
+class GPTLanguageModel(nn.Module):
 
     def __init__(self):
         super().__init__()
@@ -144,6 +147,17 @@ class BigramLanguageModel(nn.Module):
         self.blocks = nn.Sequential(*[Block(n_embd, n_head=n_head) for _ in range(n_layer)])
         self.ln_f = nn.LayerNorm(n_embd) # final layer norm
         self.lm_head = nn.Linear(n_embd, vocab_size)
+
+        # better init, not covered in the original GPT video, but important, will cover in followup video
+        self.apply(self._init_weights)
+
+    def _init_weights(self, module):
+        if isinstance(module, nn.Linear):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            if module.bias is not None:
+                torch.nn.init.zeros_(module.bias)
+        elif isinstance(module, nn.Embedding):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
     def forward(self, idx, targets=None):
         B, T = idx.shape
@@ -183,7 +197,7 @@ class BigramLanguageModel(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
 
-model = BigramLanguageModel()
+model = GPTLanguageModel()
 m = model.to(device)
 # print the number of parameters in the model
 print(sum(p.numel() for p in m.parameters())/1e6, 'M parameters')
@@ -197,7 +211,16 @@ for iter in range(max_iters):
     if iter % eval_interval == 0 or iter == max_iters - 1:
         losses = estimate_loss()
         print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
-
+    
+    # Save the model after every 500 iterations
+    if iter % 500 == 0:
+        try:
+            torch.save(model.state_dict(), model_path)
+            print(f"Model saved at iteration {iter}")
+        except Exception as e:
+            print(f"Error saving model: {e}")
+    
+    
     # sample a batch of data
     xb, yb = get_batch('train')
 
@@ -209,4 +232,5 @@ for iter in range(max_iters):
 
 # generate from the model
 context = torch.zeros((1, 1), dtype=torch.long, device=device)
-print(decode(m.generate(context, max_new_tokens=2000)[0].tolist()))
+print(decode(m.generate(context, max_new_tokens=500)[0].tolist()))
+#open('more.txt', 'w').write(decode(m.generate(context, max_new_tokens=10000)[0].tolist()))
