@@ -1,0 +1,52 @@
+10.818151 M parameters
+step 0: train loss 4.6496, val loss 4.6500
+Model saved at iteration 0
+step 500: train loss 2.1227, val loss 2.1127
+Model saved at iteration 500
+step 1000: train loss 1.6023, val loss 1.6220
+Model saved at iteration 1000
+step 1500: train loss 1.4268, val loss 1.4596
+Model saved at iteration 1500
+step 2000: train loss 1.3302, val loss 1.3707
+Model saved at iteration 2000
+step 2500: train loss 1.2739, val loss 1.3234
+Model saved at iteration 2500
+step 3000: train loss 1.2279, val loss 1.2819
+Model saved at iteration 3000
+step 3500: train loss 1.1999, val loss 1.2587
+Model saved at iteration 3500
+step 4000: train loss 1.1767, val loss 1.2361
+Model saved at iteration 4000
+step 4500: train loss 1.1578, val loss 1.2158
+Model saved at iteration 4500
+step 5000: train loss 1.1462, val loss 1.2092
+Model saved at iteration 5000
+step 5500: train loss 1.1303, val loss 1.2002
+Model saved at iteration 5500
+step 6000: train loss 1.1156, val loss 1.1856
+Model saved at iteration 6000
+step 6500: train loss 1.0999, val loss 1.1774
+Model saved at iteration 6500
+step 7000: train loss 1.0957, val loss 1.1709
+Model saved at iteration 7000
+step 7500: train loss 1.0881, val loss 1.1670
+Model saved at iteration 7500
+step 8000: train loss 1.0747, val loss 1.1541
+Model saved at iteration 8000
+step 8500: train loss 1.0686, val loss 1.1520
+Model saved at iteration 8500
+step 9000: train loss 1.0617, val loss 1.1465
+Model saved at iteration 9000
+step 9500: train loss 1.0575, val loss 1.1407
+Model saved at iteration 9500
+step 9999: train loss 1.0531, val loss 1.1372
+☻less again! Look,” he she said, “Hermione,
+back — the tasge. I’ve bin pictures hered up and gave you, through. . .”
+“Can’t the only it thought was here?” bustled Uncle Vernon.
+“I Stan and said an’ chance he’ll have you found a perfeelin’s
+honor couldn’t, practication other —”
+“Well, what’s up to think of a frect — are my astone — eh? I’ve was terging
+me? Where he has a few tiny one’ them woopan off the Dursleys?”
+“D’you’s been upsent sinkin’?” said Harry angrily,
+as McGonagall gazed at them.
+“Cu
