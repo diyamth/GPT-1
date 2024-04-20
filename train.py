@@ -14,7 +14,7 @@ eval_iters = 200
 n_embd = 384
 n_head = 6
 n_layer = 6
-dropout = 0.2
+dropout = 0.4
 model_path = os.path.join("trained_model.pt")
 # ------------
 
