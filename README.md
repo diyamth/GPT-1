@@ -20,9 +20,9 @@ The model was trained on RTX 3060 12GB NVIDIA GPU
 It was tested as it completed the sentence the user gave through the prompt.
 
 ## Getting Started 
-1. Clone the repository:
-2. Install required libraries:
+1. Clone the repository: https://github.com/diyamth/GPT-1.git
+2. Install required libraries: pip install -r requirements.txt
 
 ## License 
-This project is under 
+This project is under MIT LICENSE
 
