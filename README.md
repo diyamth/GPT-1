@@ -23,6 +23,9 @@ It was tested as it completed the sentence the user gave through the prompt.
 1. Clone the repository: https://github.com/diyamth/GPT-1.git
 2. Install required libraries: pip install -r requirements.txt
 
+## Youtube
+A YouTube video link is available with an explanation of the project - https://www.youtube.com/watch?v=_luJ6-M8xkI&t=454s
+
 ## License 
 This project is under MIT LICENSE
 
